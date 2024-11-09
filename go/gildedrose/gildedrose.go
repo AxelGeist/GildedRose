@@ -1,58 +1,93 @@
 package gildedrose
 
-type Item struct {
-	Name            string
-	SellIn, Quality int
+const maxQuality = 50
+const minQuality = 0
+
+type ItemInterface interface {
+	updateQuality()
+	updateDaysToSell()
 }
 
-func UpdateQuality(items []*Item) {
+type Item struct {
+	Name           string
+	DaysLeftToSell int
+	Quality        int
+}
+
+func UpdateQuality(items []ItemInterface) {
 	for i := 0; i < len(items); i++ {
-
-		if items[i].Name != "Aged Brie" && items[i].Name != "Backstage passes to a TAFKAL80ETC concert" {
-			if items[i].Quality > 0 {
-				if items[i].Name != "Sulfuras, Hand of Ragnaros" {
-					items[i].Quality = items[i].Quality - 1
-				}
-			}
-		} else {
-			if items[i].Quality < 50 {
-				items[i].Quality = items[i].Quality + 1
-				if items[i].Name == "Backstage passes to a TAFKAL80ETC concert" {
-					if items[i].SellIn < 11 {
-						if items[i].Quality < 50 {
-							items[i].Quality = items[i].Quality + 1
-						}
-					}
-					if items[i].SellIn < 6 {
-						if items[i].Quality < 50 {
-							items[i].Quality = items[i].Quality + 1
-						}
-					}
-				}
-			}
-		}
-
-		if items[i].Name != "Sulfuras, Hand of Ragnaros" {
-			items[i].SellIn = items[i].SellIn - 1
-		}
-
-		if items[i].SellIn < 0 {
-			if items[i].Name != "Aged Brie" {
-				if items[i].Name != "Backstage passes to a TAFKAL80ETC concert" {
-					if items[i].Quality > 0 {
-						if items[i].Name != "Sulfuras, Hand of Ragnaros" {
-							items[i].Quality = items[i].Quality - 1
-						}
-					}
-				} else {
-					items[i].Quality = items[i].Quality - items[i].Quality
-				}
-			} else {
-				if items[i].Quality < 50 {
-					items[i].Quality = items[i].Quality + 1
-				}
-			}
-		}
+		item := items[i]
+		item.updateQuality()
+		item.updateDaysToSell()
 	}
+}
 
+// AgedBrie
+type AgedBrie struct {
+	DaysLeftToSell int
+	Quality        int
+}
+
+func (brie *AgedBrie) updateQuality() {
+	if brie.DaysLeftToSell < 0 {
+		brie.decreaseQualityIfMinNotReached(2)
+	} else {
+		brie.increaseQualityIfMaxNotReached(1)
+	}
+}
+
+func (brie *AgedBrie) updateDaysToSell() {
+	brie.DaysLeftToSell -= 1
+}
+
+func (brie *AgedBrie) increaseQualityIfMaxNotReached(increase int) {
+	brie.Quality = min(maxQuality, brie.Quality+increase)
+}
+
+func (brie *AgedBrie) decreaseQualityIfMinNotReached(decrease int) {
+	brie.Quality = max(minQuality, brie.Quality-decrease)
+}
+
+// BackStage
+type Backstage struct {
+	DaysLeftToSell int
+	Quality        int
+}
+
+func (backstage *Backstage) updateQuality() {
+	if backstage.DaysLeftToSell < 0 {
+		backstage.resetQuality()
+	} else if backstage.DaysLeftToSell <= 5 {
+		backstage.increaseQualityIfMaxNotReached(3)
+	} else if backstage.DaysLeftToSell <= 10 {
+		backstage.increaseQualityIfMaxNotReached(5)
+	} else {
+		backstage.increaseQualityIfMaxNotReached(1)
+	}
+}
+
+func (backstage *Backstage) resetQuality() {
+	backstage.Quality = 0
+}
+
+func (backstage *Backstage) increaseQualityIfMaxNotReached(increase int) {
+	backstage.Quality = min(maxQuality, backstage.Quality+increase)
+}
+
+func (backstage *Backstage) updateDaysToSell() {
+	backstage.DaysLeftToSell -= 1
+}
+
+// Sulfuras
+type Sulfuras struct {
+	DaysLeftToSell int
+	Quality        int
+}
+
+func (sulfuras *Sulfuras) updateQuality() {
+	sulfuras.Quality = 80 // quality never changes
+}
+
+func (sulfuras *Sulfuras) updateDaysToSell() {
+	sulfuras.DaysLeftToSell -= 1
 }
