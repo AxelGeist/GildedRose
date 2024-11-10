@@ -12,15 +12,15 @@ func main() {
 	fmt.Println("OMGHAI!")
 
 	var items = []gildedrose.ItemInterface{
-		// {"+5 Dexterity Vest", 10, 20},
-		&gildedrose.AgedBrie{DaysLeftToSell: 2, Quality: 0},
-		// {"Elixir of the Mongoose", 5, 7},
-		&gildedrose.Sulfuras{DaysLeftToSell: 0, Quality: 80},
-		&gildedrose.Sulfuras{DaysLeftToSell: -1, Quality: 80},
-		&gildedrose.Backstage{DaysLeftToSell: 15, Quality: 20},
-		&gildedrose.Backstage{DaysLeftToSell: 10, Quality: 49},
-		&gildedrose.Backstage{DaysLeftToSell: 5, Quality: 49},
-		// {"Conjured Mana Cake", 3, 6}, // <-- :O
+		&gildedrose.NormalItem{Name: gildedrose.NormalItemPlus5DexterityVest, Base: gildedrose.BaseItem{DaysLeftToSell: 10, Quality: 20, IsConjured: false}},
+		&gildedrose.AgedBrie{Base: gildedrose.BaseItem{DaysLeftToSell: 2, Quality: 0, IsConjured: false}},
+		&gildedrose.NormalItem{Name: gildedrose.NormalItemElixirMongoose, Base: gildedrose.BaseItem{DaysLeftToSell: 5, Quality: 7, IsConjured: false}},
+		&gildedrose.Sulfuras{Base: gildedrose.BaseItem{DaysLeftToSell: 0, Quality: 80, IsConjured: false}},
+		&gildedrose.Sulfuras{Base: gildedrose.BaseItem{DaysLeftToSell: -1, Quality: 80, IsConjured: false}},
+		&gildedrose.Backstage{Base: gildedrose.BaseItem{DaysLeftToSell: 15, Quality: 20, IsConjured: false}},
+		&gildedrose.Backstage{Base: gildedrose.BaseItem{DaysLeftToSell: 10, Quality: 49, IsConjured: false}},
+		&gildedrose.Backstage{Base: gildedrose.BaseItem{DaysLeftToSell: 5, Quality: 49, IsConjured: false}},
+		&gildedrose.NormalItem{Name: gildedrose.NormalItemManaCake, Base: gildedrose.BaseItem{DaysLeftToSell: 3, Quality: 6, IsConjured: true}},
 	}
 
 	days := 2
